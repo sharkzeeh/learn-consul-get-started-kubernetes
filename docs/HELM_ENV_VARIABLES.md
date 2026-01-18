@@ -21,6 +21,8 @@ $env:HTTP_PROXY  = "socks5://127.0.0.1:1080"
 $env:HTTPS_PROXY = "socks5://127.0.0.1:1080"
 $env:http_proxy  = $env:HTTP_PROXY
 $env:https_proxy = $env:HTTPS_PROXY
+
+$env:ALL_PROXY="socks5://127.0.0.1:1080" # ?
 ```
 
 ## Linux
@@ -32,4 +34,19 @@ export HTTP_PROXY="socks5://127.0.0.1:1080"
 export HTTPS_PROXY="socks5://127.0.0.1:1080"
 export http_proxy="$HTTP_PROXY"
 export https_proxy="$HTTPS_PROXY"
+```
+
+## Helm commands
+
+```sh
+helm repo list
+NAME            URL
+hashicorp       https://helm.releases.hashicorp.com
+
+helm search repo hashicorp/consul --versions
+NAME                    CHART VERSION   APP VERSION     DESCRIPTION
+hashicorp/consul        1.9.2           1.22.2          Official HashiCorp Consul Chart
+hashicorp/consul        1.9.1           1.22.1          Official HashiCorp Consul Chart
+hashicorp/consul        1.9.0           1.22.0          Official HashiCorp Consul Chart
+...
 ```

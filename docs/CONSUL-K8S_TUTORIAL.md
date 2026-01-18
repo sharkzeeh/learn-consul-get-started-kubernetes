@@ -1,5 +1,9 @@
 # Hashicorp consul-k8s tutorials
 
+Links:
+- https://github.com/hashicorp/consul-k8s
+- https://developer.hashicorp.com/consul/tutorials/get-started-kubernetes
+
 ## Install Hashicorp binaries
 
 ### Download consul-k8s cli
@@ -57,7 +61,7 @@ cd learn-consul-get-started-kubernetes/self-managed/local
 - template chart
 ```sh
 helm template consul hashicorp/consul -n consul `
-    -f helm/values-v1.yaml `  
+    -f helm/values-v1.yaml `
     --version 1.9.2 > rendered.yaml
 ```
 
@@ -67,6 +71,11 @@ helm install --values helm/values-v1.yaml consul hashicorp/consul --create-names
 
 # helm uninstall consul -n consul --no-hooks
 # kubectl delete namespace consul --wait=false
+```
+
+- set default namespace
+```sh
+kubectl config set-context --current --namespace=consul
 ```
 
 - set env variables (+ acl token)
