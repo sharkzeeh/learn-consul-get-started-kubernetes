@@ -3,7 +3,7 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 # HTTPRoute routes HTTP requests to backend services.
 kind: HTTPRoute
 metadata:
-  name: http-route-1
+  name: http-route-2
   namespace: consul
 spec:
   # Defines the gateway listener.
@@ -18,7 +18,16 @@ spec:
     # Defines the backend service.
     backendRefs:
     - kind: Service
-      name: nginx
-      # namespace: default
-      namespace: demo
-      port: 80
+      name: public-api
+      namespace: default
+      port: 8080
+
+# NOTE: Service Intention "public-api" needs patching (allow access from api-gateway)
+# spec:
+#   destination:
+#     name: public-api
+#   sources:
+#   - action: allow
+#     name: nginx
+#   - action: allow
+#     name: api-gateway

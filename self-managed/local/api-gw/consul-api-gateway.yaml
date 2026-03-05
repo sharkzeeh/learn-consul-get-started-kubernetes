@@ -6,13 +6,27 @@ metadata:
   name: api-gateway
   namespace: consul
 spec:
+  # kubectl get gatewayclass consul -o yaml
   gatewayClassName: consul
   # Configures the listener that is bound to the gateway's address.
   listeners:
     # Defines the listener protocol (HTTP, HTTPS, or TCP)
+    # HTTP
   - protocol: HTTP
     port: 8080
     name: http
     allowedRoutes:
       namespaces:
         from: Same
+    # HTTPS
+  - protocol: HTTPS
+    port: 8443
+    name: https
+    allowedRoutes:
+      namespaces:
+        from: Same
+    # TLS config
+    tls:
+      # Defines the certificate to use for the HTTPS listener.
+      certificateRefs:
+        - name: consul-server-cert
