@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debug
+  template:
+    metadata:
+      labels:
+        app: debug
+      annotations:
+        consul.hashicorp.com/connect-inject: "false"
+    spec:
+      containers:
+        - name: netshoot
+          # image: curlimages/curl
+          image: nicolaka/netshoot
+          command: ["sleep","3600"]
+          # securityContext:
+          #   runAsUser: 0
+          #   runAsGroup: 0
+          #   privileged: true
+          #   allowPrivilegeEscalation: true

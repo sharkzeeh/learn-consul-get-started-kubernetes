@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debug
+  template:
+    metadata:
+      labels:
+        app: debug
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        # consul.hashicorp.com/connect-service-upstreams: "public-api:8080,frontend:3000"
+    spec:
+      serviceAccountName: debug
+      containers:
+        - name: netshoot
+          # image: curlimages/curl
+          image: nicolaka/netshoot
+          command: ["sleep","3600"]
+          # run privileged: iptables -t nat -L -n -v
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            privileged: true
+            allowPrivilegeEscalation: true
