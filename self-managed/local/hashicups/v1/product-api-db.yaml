@@ -43,6 +43,9 @@ spec:
         app: product-api-db
       annotations:
         consul.hashicorp.com/connect-inject: "true"
+        # Allow Prometheus to scrape Envoy metrics on 20200 even when
+        # transparent proxy is enabled (otherwise inbound traffic can be redirected).
+        # consul.hashicorp.com/transparent-proxy-exclude-inbound-ports: "20200"
     spec:
       serviceAccountName: product-api-db
       containers:

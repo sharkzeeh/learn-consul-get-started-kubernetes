@@ -100,6 +100,9 @@ spec:
       annotations:
         consul.hashicorp.com/connect-inject: "true"
         consul.hashicorp.com/connect-service-upstreams: "frontend:3000, public-api:8080"
+        # Allow Prometheus to scrape Envoy metrics on 20200 even when
+        # transparent proxy is enabled (otherwise inbound traffic can be redirected).
+        # consul.hashicorp.com/transparent-proxy-exclude-inbound-ports: "20200"
     spec:
       serviceAccountName: nginx
       containers:
