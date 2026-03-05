@@ -15,8 +15,45 @@ server:
 alertmanager:
   enabled: false
 nodeExporter:
+  # Disable for local windows server
+  enabled: false
   podAnnotations:
     "consul.hashicorp.com/connect-inject": "false"
+
+# Prometheus chart scrapes pods/services only when they opt-in via annotations.
+# This adds an explicit scrape job for Consul-injected workloads in the `default`
+# namespace, scraping Envoy metrics on :20200/metrics.
+
+# Allow multiple namespaces ("default" and "demo")
+# relabel_configs:
+#   - action: keep
+#     source_labels: [__meta_kubernetes_namespace]
+#     regex: (default|demo)
+
+extraScrapeConfigs: |
+  - job_name: consul-envoy
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - action: keep
+        source_labels: [__meta_kubernetes_namespace]
+        regex: (default|demo)
+      - action: keep
+        source_labels: [__meta_kubernetes_pod_annotation_consul_hashicorp_com_connect_inject]
+        regex: "true"
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_ip]
+        target_label: __address__
+        replacement: $1:20200
+      - action: replace
+        target_label: __metrics_path__
+        replacement: /metrics
+      - action: replace
+        source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - action: replace
+        source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
 pushgateway:
   podAnnotations:
     "consul.hashicorp.com/connect-inject": "false"

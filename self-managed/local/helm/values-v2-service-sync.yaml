@@ -33,14 +33,15 @@ ui:
 # Configures and installs the automatic Consul Connect sidecar injector.
 connectInject:
   enabled: true
-    # Enables metrics for Consul Connect sidecars.
   transparentProxy:
     defaultEnabled: true
   default: true
-  # Enable Consul ingress features (default apiGateway.manageExternalCRDs = true) - error otherwise
-  # apiGateway:
-  #   manageExternalCRDs: true
-# Serivce Sync
+  apiGateway:
+    # Configuration settings for the GatewayClass
+    managedGatewayClass:
+      # Defines the type of service created for gateways (e.g. LoadBalancer, ClusterIP, NodePort)
+      # NodePort is primarily used for local deployments.
+      serviceType: LoadBalancer
 syncCatalog:
   enabled: true
   # toConsul: true
