@@ -15,7 +15,7 @@ syncCatalog:
 
 - install / upgrade helm chart
 ```sh
-helm upgrade --install --values helm/values-v1-service-sync.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.9.2"
+helm upgrade --install --values helm/values-v1-service-sync.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.9.3"
 ```
 
 - inspect services in Consul UI
