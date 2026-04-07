@@ -15,7 +15,7 @@ Links:
 ### Linux
 
 ```sh
-VERSION=1.9.1
+VERSION=1.9.3
 curl -LO https://releases.hashicorp.com/consul-k8s/${VERSION}/consul-k8s_${VERSION}_linux_amd64.zip
 unzip consul-k8s_${VERSION}_linux_amd64.zip
 
@@ -68,15 +68,15 @@ cd learn-consul-get-started-kubernetes/self-managed/local
 ```sh
 helm template consul hashicorp/consul -n consul `
     -f helm/values-v1.yaml `
-    --version 1.9.2 > rendered.yaml
+    --version 1.9.3 > rendered.yaml
 ```
 
 - install consul-k8s with Helm
 ```sh
-helm install --values helm/values-v1.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.9.2"
+helm install --values helm/values-v1.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.9.3"
 
 # with service sync
-helm install --values helm/values-v1-service-sync.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.9.2"
+helm install --values helm/values-v1-service-sync.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.9.3"
 ```
 
 - uninstall
@@ -263,7 +263,7 @@ connectInject:
 ```
 
 ```sh
-helm upgrade --values helm/values-v2-service-sync.yaml consul hashicorp/consul --namespace consul --version "1.9.2"
+helm upgrade --values helm/values-v2-service-sync.yaml consul hashicorp/consul --namespace consul --version "1.9.3"
 ```
 
 ```sh
@@ -408,16 +408,14 @@ connectInject:
     defaultEnabled: true
     defaultEnableMerging: false # default: true
 ```
-if one sets `connectInject.metrics.defaultEnableMerging: true`, then there will be an error in Prometheus targets 
+
+if one sets `connectInject.metrics.defaultEnableMerging: true`, then there will be an error in Prometheus targets
 ```sh
 strconv.ParseFloat: parsing "to": invalid syntax
 ```
 
 the error comes from fetching the merged sidecar metrics output from a pod
 ```sh
-$ kubectl -n default exec deploy/prometheus-server -c prometheus-server -- sh -c `
-"wget -qO- http://10.1.1.255:20200/metrics | sed -n '2910,2925p'"
-
 $ kubectl -n default exec deploy/prometheus-server -c prometheus-server -- sh -c `
 "wget -qO- http://nginx.demo:20200/metrics | sed -n '2910,2925p'"
 
@@ -430,7 +428,7 @@ So for your setup, leave `connectInject.metrics.defaultEnableMerging: false` unl
 ---
 
 ```sh
-$ helm upgrade --values helm/values-v3-service-sync.yaml consul hashicorp/consul --namespace consul --version "1.9.2"
+$ helm upgrade --values helm/values-v3-service-sync.yaml consul hashicorp/consul --namespace consul --version "1.9.3"
 
 $ kubectl -n demo apply -f proxy/proxy-defaults.yaml
 proxydefaults.consul.hashicorp.com/global created
@@ -522,9 +520,17 @@ Prometheus chart scrapes pods/services only when they opt-in via annotations.
 This adds an explicit scrape job for Consul-injected workloads
 in the `default` or `demo` namespaces, scraping Envoy metrics on `:20200/metrics`.
 
-**NOTE**: 
+**NOTE**:
   - `regex: (default|demo)`
   - `replacement: $1:20200`
+
+This can be ommited to scrape all namespaces
+```yaml
+      - action: keep
+        source_labels: [__meta_kubernetes_namespace]
+        regex: (default|demo)
+```
+
 ```yaml
 # helm/prometheus.yaml
 
