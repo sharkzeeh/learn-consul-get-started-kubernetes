@@ -72,4 +72,8 @@ hashicorp/consul        1.9.0           1.22.0          Official HashiCorp Consu
 ...
 
 helm ls -n consul
+
+helm pull prometheus-community/prometheus \
+  --version 15.18.0 \
+  --untardir ./charts/prometheus/15.18.0
 ```
